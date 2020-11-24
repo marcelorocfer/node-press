@@ -4,7 +4,7 @@ const Category = require("../categories/Category");
 const Article = require("./Article");
 const slugify = require("slugify");
 
-router.get("/articles", (req, res) => {
+router.get("/admin/articles", (req, res) => {
     res.send("Rota de Artigos");
 });
 
@@ -24,6 +24,8 @@ router.post("/articles/save", (req, res) => {
         body,
         categoryId: category,
         slug: slugify(title.toLowerCase()),
+    }).then(() => {
+        res.redirect("/admin/articles");
     });
 });
 

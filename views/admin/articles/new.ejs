@@ -10,8 +10,7 @@
             <form method="POST" action="/categories/save">
                 <label for="title">Título</label>
                 <input type="text" id="title" name="title" placeholder="Defina o título do artigo." class="form-control mb-3">
-                <label for="body">Texto</label>
-                <textarea name="body" id="body" class="form-control" placeholder="Escreva aqui o seu artigo."></textarea>
+                <textarea name="body" id="article" class="form-control" placeholder="Escreva aqui o seu artigo."></textarea>
                 <button class="btn btn-primary mt-3">Cadastrar</button>
             </form>
         </div>
@@ -19,3 +18,13 @@
 </div>
 
 <%- include('../../partials/footer.ejs') %>
+
+<script src="/tinymce/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: "#article",
+        plugins: [
+            'advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons'
+        ]
+    });
+</script>

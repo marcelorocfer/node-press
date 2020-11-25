@@ -33,4 +33,20 @@ router.post("/articles/save", (req, res) => {
     });
 });
 
+router.post("/articles/delete", (req, res) => {
+    var id = req.body.id;
+
+    if(!isNaN(id) && id != undefined) {
+
+        Article.destroy({
+            where: { id }
+        }).then(() => {
+            res.redirect("/admin/articles");
+        });
+
+    } else {
+        res.redirect("/admin/articles");
+    }
+});
+
 module.exports = router;

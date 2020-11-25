@@ -17,15 +17,25 @@
         </tr>
         </thead>
         <tbody>
-            <% articles.forEach(article => { %>
-                <tr>
-                    <td><%= article.id %></td>
-                    <td><%= article.title %></td>
-                    <td><%= article.slug %></td>
-                    <td><%= article.category.title %></td>
-                    <td>Ações</td>
-                </tr>
-            <% }) %>
+        <% articles.forEach(article => { %>
+            <tr>
+                <td><%= article.id %></td>
+                <td><%= article.title %></td>
+                <td><%= article.slug %></td>
+                <td><%= article.category.title %></td>
+                <td>
+                    <a href="" class="btn btn-warning">Editar</a>
+                    <form
+                        method="POST"
+                        action="/articles/delete"
+                        style="display: inline"
+                        onsubmit="confirmarExclusao(event, this)">
+                        <input type="hidden" name="id" value="<%= article.id %>">
+                        <button class="btn btn-danger">Deletar</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
         </tbody>
     </table>
 </div>
@@ -34,7 +44,7 @@
 <script>
     function confirmarExclusao(event, form) {
         event.preventDefault();
-        var decisao = confirm("Você deseja excluir esta categoria?");
+        var decisao = confirm("Você deseja excluir este artigo?");
         if(decisao) {
             form.submit();
         }

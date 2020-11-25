@@ -6,6 +6,9 @@ const connection = require("./database/database");
 const categoriesController = require("./categories/CategoriesController");
 const articlesController = require("./articles/ArticlesController");
 
+const Category = require("./categories/Category");
+const Article = require("./articles/Article");
+
 // View Engine
 app.set('view engine', 'ejs');
 
@@ -29,7 +32,9 @@ app.use("/", categoriesController);
 app.use("/", articlesController);
 
 app.get("/", (req, res) => {
-    res.render("index");
+    Article.findAll().then(articles => {
+        res.render("index", { articles });
+    });
 });
 
 app.listen(8080, () => {

@@ -80,4 +80,31 @@ router.post("/articles/update", (req, res) => {
     })
 });
 
+router.get("/articles/page/:num", (req, res) => {
+    let page = req.params.num;
+    let offset = 0;
+    
+    if(isNaN(page) || page == 1) {
+        offset = 0;
+    } else {
+        offset = parseInt(page) * 2;
+    }
+    
+    Article.findAndCountAll({
+        limit: 4,
+        offset
+    }).then(articles => {
+        let next;
+
+        if(offset + 4 >= articles.count) {
+            next = false;
+        } else {
+            next = true;
+        }
+
+        let result = { next, articles };
+        res.json(result);
+    })
+});
+
 module.exports = router;

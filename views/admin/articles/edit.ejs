@@ -7,9 +7,10 @@
             <h2>Editar Artigo</h2>
         </div>
         <div class="card-body">
-            <form method="POST" action="/articles/save">
+            <form method="POST" action="/articles/update">
                 <label for="title">Título</label>
-                <input type="text" id="title" name="title" placeholder="Defina o título do artigo." class="form-control mb-3">
+                <input type="text" id="title" name="title" value="<%= article.title %>" placeholder="Defina o título do artigo." class="form-control mb-3">
+                <input type="hidden" name="id" value="<%= article.id %>">
                 <label for="category">Categoria</label>
                 <select name="category" class="form-control mb-3" id="category">
                     <% categories.forEach((category) => { %>

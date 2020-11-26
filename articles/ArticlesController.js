@@ -35,7 +35,6 @@ router.post("/articles/save", (req, res) => {
 
 router.post("/articles/delete", (req, res) => {
     var id = req.body.id;
-
     if(!isNaN(id) && id != undefined) {
 
         Article.destroy({
@@ -47,6 +46,22 @@ router.post("/articles/delete", (req, res) => {
     } else {
         res.redirect("/admin/articles");
     }
+});
+
+router.get("/admin/articles/edit/:id", (req, res) => {
+    let id = req.params.id;
+    Article.findByPk(id).then(article => {
+        if(article != undefined) {
+            Category.findAll().then(categories => {
+                res.render("admin/articles/edit", { categories });
+            });
+        } else {
+            res.redirect("/");
+        }
+    }).catch(err => {
+        res.redirect("/");
+        console.log(err);
+    })
 });
 
 module.exports = router;

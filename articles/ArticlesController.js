@@ -35,7 +35,6 @@ router.post("/articles/save", (req, res) => {
 
 router.post("/articles/delete", (req, res) => {
     var id = req.body.id;
-
     if(!isNaN(id) && id != undefined) {
 
         Article.destroy({
@@ -47,6 +46,75 @@ router.post("/articles/delete", (req, res) => {
     } else {
         res.redirect("/admin/articles");
     }
+});
+
+router.get("/admin/articles/edit/:id", (req, res) => {
+    let id = req.params.id;
+    Article.findByPk(id).then(article => {
+        if(article != undefined) {
+            Category.findAll().then(categories => {
+                res.render("admin/articles/edit", { article, categories });
+            });
+        } else {
+            res.redirect("/");
+        }
+    }).catch(err => {
+        res.redirect("/");
+        console.log(err);
+    })
+});
+
+router.post("/articles/update", (req, res) => {
+    let id = req.body.id;
+    let title = req.body.title;
+    let body = req.body.body;
+    let category = req.body.category;
+
+    Article.update({ title, body, slug: slugify(title.toLowerCase()), categoryId: category }, {
+        where: { id }
+    }).then(() => {
+        res.redirect("/admin/articles");
+    }).catch(err => {
+        res.redirect("/");
+        console.log(err);
+    })
+});
+
+router.get("/articles/page/:num", (req, res) => {
+    let page = req.params.num;
+    let offset = 0;
+    
+    if(isNaN(page) || page == 1) {
+        offset = 0;
+    } else {
+        offset = (parseInt(page) - 1) * 4;
+    }
+    
+    Article.findAndCountAll({
+        limit: 4,
+        offset,
+        order: [
+            ['id', 'DESC']
+        ]
+    }).then(articles => {
+        let next;
+
+        if(offset + 4 >= articles.count) {
+            next = false;
+        } else {
+            next = true;
+        }
+
+        let result = {
+            page: parseInt(page),
+            next,
+            articles
+        };
+
+        Category.findAll().then(categories => {
+            res.render("admin/articles/page", { result, categories });
+        });
+    })
 });
 
 module.exports = router;

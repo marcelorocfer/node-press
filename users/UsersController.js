@@ -4,7 +4,9 @@ const User = require("./User");
 const bcrypt = require("bcryptjs");
 
 router.get("/admin/users", (req, res) => {
-    res.send("Listagem de Usuários");
+    User.findAll().then(users => {
+        res.render("admin/users/index", { users });
+    });
 });
 
 router.get("/admin/users/create", (req, res) => {
@@ -15,17 +17,25 @@ router.post("/users/create", (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    let salt = bcrypt.genSaltSync(10);
-    let hash = bcrypt.hashSync(password, salt);
+    User.findOne({ where: { email }}).then(user => {
+        if(user == undefined) {
 
-    User.create({
-        email,
-        password: hash
-    }).then(() => {
-        res.redirect("/");
-    }).catch((err) => {
-        res.redirect("/");
-        console.log(err);
+            let salt = bcrypt.genSaltSync(10);
+            let hash = bcrypt.hashSync(password, salt);
+
+            User.create({
+                email,
+                password: hash
+            }).then(() => {
+                res.redirect("/");
+            }).catch((err) => {
+                res.redirect("/");
+                console.log(err);
+            });
+
+        } else {
+            res.render("admin/users/create");
+        }
     });
 });
 

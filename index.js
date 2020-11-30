@@ -18,7 +18,9 @@ app.set('view engine', 'ejs');
 // Sessions
 app.use(session({
     secret: "umtextoqualquer",
-    cookie: { maxAge: 30000 }
+    cookie: { maxAge: 86400000 },
+    resave: true,
+    saveUninitialized: true
 }));
 
 // Static
@@ -40,7 +42,6 @@ connection
 app.use("/", categoriesController);
 app.use("/", articlesController);
 app.use("/", usersController);
-
 
 app.get("/", (req, res) => {
     Article.findAll({
